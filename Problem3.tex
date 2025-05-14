@@ -1,0 +1,52 @@
+\documentclass[12pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{parskip}
+
+\title{Problem 3}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+Let \( X \) be a binary random variable, which takes values \( X \in \{0, 1\} \), and \( Y \) be a random variable representing the label. The mutual information between \( X \) and \( Y \) is given by:
+
+\[
+I(X, Y) = H(Y) - H(Y|X)
+\]
+
+\textbf{Entropy of a Binary Variable \( X \)}
+
+For a binary variable \( X \), the entropy \( H(X) \) is given by the binary entropy function:
+
+\[
+H(X) = -p \log_2 p - (1 - p) \log_2 (1 - p)
+\]
+where \( p = P(X = 0) \) and \( 1 - p = P(X = 1) \), with \( 0 \leq p \leq 1 \).
+
+The maximum value of this entropy occurs when \( p = 0.5 \), i.e., when the two outcomes are equally likely. In this case:
+
+\[
+H(X) = -0.5 \log_2 0.5 - 0.5 \log_2 0.5 = 1
+\]
+
+Thus, for a binary variable \( X \), we have:
+
+\[
+H(X) \leq 1
+\]
+
+\textbf{Information Gain from a Binary Split}
+
+Now consider the mutual information between \( X \) and \( Y \).
+
+Since \( H(X) \leq 1 \) for any binary variable \( X \), it follows that:
+
+\[
+I(X; Y) = H(X) - H(X|Y) \leq H(X) \leq 1
+\]
+
+Thus, the maximum possible information gain (entropy reduction) from a split on \( X \) is at most 1 bit.
+
+\end{document}
