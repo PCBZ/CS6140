@@ -1,10 +1,10 @@
-This is XeTeX, Version 3.141592653-2.6-0.999995 (TeX Live 2023) (preloaded format=xelatex 2023.9.29)  13 MAY 2025 22:58
+This is XeTeX, Version 3.141592653-2.6-0.999995 (TeX Live 2023) (preloaded format=xelatex 2023.9.29)  17 MAY 2025 23:23
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**Problem3
-(./Problem3.tex
+**Problem4
+(./Problem4.tex
 LaTeX2e <2022-11-01> patch level 1
 L3 programming layer <2023-02-22> (/usr/local/texlive/2023/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2022/07/02 v1.4n Standard LaTeX document class
@@ -62,8 +62,8 @@ File: l3backend-xetex.def 2023-01-16 L3 backend support: XeTeX
 \g__pdf_backend_object_int=\count194
 \g__pdf_backend_annotation_int=\count195
 \g__pdf_backend_link_int=\count196
-) (./Problem3.aux)
-\openout1 = `Problem3.aux'.
+) (./Problem4.aux)
+\openout1 = `Problem4.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 9.
 LaTeX Font Info:    ... okay on input line 9.
@@ -125,21 +125,21 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <7> on input line 10.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 13.
+(Font)              <12> on input line 15.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 13.
+(Font)              <8> on input line 15.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 13.
+(Font)              <6> on input line 15.
 [1
 
-] (./Problem3.aux) ) 
+] (./Problem4.aux) ) 
 Here is how much of TeX's memory you used:
  1807 strings out of 476683
  31089 string characters out of 5804047
- 1848018 words of memory out of 5000000
+ 1847018 words of memory out of 5000000
  22085 multiletter control sequences out of 15000+600000
  515968 words of font info for 48 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  55i,5n,62p,497b,188s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on Problem3.pdf (1 page).
+Output written on Problem4.pdf (1 page).
