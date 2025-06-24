@@ -1,0 +1,428 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.4in]{geometry}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% Define colors for code highlighting
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+% Code listing style
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+\title{Problem 3}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+% Define a custom environment for code-explanation pairs
+\newenvironment{codeexplain}[1][\linewidth]{%
+    \begin{minipage}{#1}
+    \begin{minipage}[t]{0.48\linewidth}
+}{%
+    \end{minipage}
+    \end{minipage}
+}
+
+\section{Main Function}
+
+\begin{minipage}{\textwidth}
+\begin{minipage}[t]{0.48\textwidth}
+\begin{lstlisting}[language=Matlab, firstnumber=1]
+function [label, model, llh] = emgm(X, init)
+% Perform EM algorithm for fitting the Gaussian mixture model.
+% X: d x n data matrix
+% init: k (1 x 1) or label (1 x n, 1<=label(i)<=k) or center (d x k)
+% Written by Michael Chen (sth4nth@gmail.com).
+\end{lstlisting}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+Implements EM algorithm for Gaussian Mixture Models.
+\textbf{Inputs:}
+\begin{itemize}
+\item \texttt{X}: Data matrix ($d \times n$) where $d$ = dimensions, $n$ = samples
+\item \texttt{init}: Flexible initialization:
+    \begin{itemize}
+    \item Single number $k$ (number of clusters)
+    \item Label vector ($1 \times n$) with assignments
+    \item Center matrix ($d \times k$) with initial centers
+    \end{itemize}
+\end{itemize}
+\textbf{Outputs:}
+\begin{itemize}
+\item \texttt{label}: Final cluster assignments
+\item \texttt{model}: Learned GMM parameters ($\mu$, $\Sigma$, $\pi$)
+\item \texttt{llh}: Log-likelihood history
+\end{itemize}
+\end{minipage}
+\end{minipage}
+
+\vspace{0.5cm}
+
+\section{Initialization}
+
+\begin{minipage}{\textwidth}
+\begin{minipage}[t]{0.48\textwidth}
+\begin{lstlisting}[language=Matlab, firstnumber=6]
+%% initialization
+fprintf('EM for Gaussian mixture: running ... \n');
+R = initialization(X,init);
+[~,label(1,:)] = max(R,[],2);
+R = R(:,unique(label));
+\end{lstlisting}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+Create initial responsibility matrix $R$.
+Convert soft assignments to hard labels: take maximum responsibility to each cluster.
+Then, remove empty clusters.
+\end{minipage}
+\end{minipage}
+
+\vspace{0.5cm}
+
+\section{Algorithm Parameters}
+
+\begin{minipage}{\textwidth}
+\begin{minipage}[t]{0.48\textwidth}
+\begin{lstlisting}[language=Matlab, firstnumber=11]
+
+tol = 1e-10;
+maxiter = 500;
+llh = -inf(1,maxiter);
+converged = false;
+t = 1;
+\end{lstlisting}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+Set convergence tolerance, maximum number of iterations, and initialize log-likelihood array.
+\end{minipage}
+\end{minipage}
+
+\vspace{0.5cm}
+
+\section{Main EM Iteration}
+
+\begin{minipage}{\textwidth}
+\begin{minipage}[t]{0.48\textwidth}
+\begin{lstlisting}[language=Matlab, firstnumber=17]
+while ~converged && t < maxiter
+    t = t+1;
+    model = maximization(X,R);
+    [R, llh(t)] = expectation(X,model);
+\end{lstlisting}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+Continue while not converged AND not reach max iteration count.
+
+\textbf{M-step (Maximization)}: update model parameters based on current responsibilities.
+
+\textbf{E-step (Expectation)}: compute new responsibilities $R$ and log-likelihood history.
+\end{minipage}
+\end{minipage}
+
+\vspace{0.5cm}
+
+\section{Cluster Management}
+
+\begin{minipage}{\textwidth}
+\begin{minipage}[t]{0.48\textwidth}
+\begin{lstlisting}[language=Matlab, firstnumber=21]
+
+    [~,label(:)] = max(R,[],2);
+    u = unique(label);   % non-empty components
+    if size(R,2) ~= size(u,2)
+        R = R(:,u);      % remove empty components
+    else
+        converged = llh(t)-llh(t-1) < tol*abs(llh(t));
+    end
+    figure(gcf); clf;
+    spread(X,label);
+    muA = model.mu;
+    SigmaA = model.Sigma;
+    wA = model.weight;
+    k = size(muA,2);
+    % figure(12); clf;
+    % for i=1:k
+    %     mu1 =muA(i,:)
+    %     Sigma1=SigmaA(i,:)
+    %     w1=wA(i)
+    %     xx= mvnrnd(mu1, Sigma1, 1000);
+    %     yy= mvnpdf(xx,mu1,Sigma1);
+    %     plot3(xx(:,1), xx(:,2), yy, '.b'); hold on; 
+    % end
+    
+    pause;
+
+
+end
+llh = llh(2:t);
+if converged
+    fprintf('Converged in %d steps.\n',t-1);
+else
+    fprintf('Not converged in %d steps.\n',maxiter);
+end
+\end{lstlisting}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+Update hard cluster assignments based on maximum responsibilities.
+
+Remove empty clusters from $R$ if any.
+
+Update convergence status based on relative change in log-likelihood and tolerance.
+
+Extract model parameters: number of clusters \texttt{k}, means \texttt{mu}, covariances \texttt{Sigma}, and weights \textbf{$w$}.
+
+Trim log-likelihood array.
+\end{minipage}
+\end{minipage}
+
+\vspace{0.5cm}
+
+\section{Initialization Function}
+
+\begin{minipage}{\textwidth}
+\begin{minipage}[t]{0.48\textwidth}
+\begin{lstlisting}[language=Matlab, firstnumber=56]
+function R = initialization(X, init)
+[d,n] = size(X);
+if isstruct(init)  % initialize with a model
+    R = expectation(X,init);
+elseif length(init) == 1  % random initialization
+    k = init;
+    idx = randsample(n,k);
+    m = X(:,idx);
+    [~,label] = max(bsxfun(@minus,m'*X,dot(m,m,1)'/2),[],1);
+    [u,~,label] = unique(label);
+    while k ~= length(u)
+        idx = randsample(n,k);
+        m = X(:,idx);
+        [~,label] = max(bsxfun(@minus,m'*X,dot(m,m,1)'/2),[],1);
+        [u,~,label] = unique(label);
+    end
+    R = full(sparse(1:n,label,1,n,k,n));
+elseif size(init,1) == 1 && size(init,2) == n
+    label = init;
+    k = max(label);
+    R = full(sparse(1:n,label,1,n,k,n));
+elseif size(init,1) == d  %initialize with only centers
+    k = size(init,2);
+    m = init;
+    [~,label] = max(bsxfun(@minus,m'*X,dot(m,m,1)'/2),[],1);
+    R = full(sparse(1:n,label,1,n,k,n));
+else
+    error('ERROR: init is not valid.');
+end
+\end{lstlisting}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+
+Extract data dimensions
+\begin{itemize}
+\item $d$ = number of features
+\item $n$ = number of data points
+\end{itemize}
+
+\subsection{Initialize with a model:} If init is a model struct, use E-step to compute responsibilities $R$.
+
+\subsection{Random initialization:} select $k$ random points as initial centers, then assign points to nearest center using the trick $\arg\max(m'X - \|m\|^2/2) = \arg\min(\|X-m\|^2)$, ensuring consecutive labels (1,2,3...).
+
+\textbf{Handle empty clusters:}
+\begin{itemize}
+\item Keep resampling until all $k$ clusters have members
+\item Prevents degenerate initialization
+\end{itemize}
+
+\textbf{Create responsibility matrix $R$:} Using sparse matrix and
+creates binary $n \times k$ matrix.
+
+\subsection{Initialize with labels:} Provides cluster assignments
+then convert to matrix format.
+
+\subsection{Initialize with centers}
+Provides $d \times k$ center matrix and assign points to nearest center
+\end{minipage}
+\end{minipage}
+
+\vspace{0.5cm}
+
+
+\section{E-step Function}
+
+\begin{minipage}{\textwidth}
+\begin{minipage}[t]{0.48\textwidth}
+\begin{lstlisting}[language=Matlab, firstnumber=87]
+function [R, llh] = expectation(X, model)
+mu = model.mu;
+Sigma = model.Sigma;
+w = model.weight;
+
+n = size(X,2);
+k = size(mu,2);
+logRho = zeros(n,k);
+
+for i = 1:k
+    logRho(:,i) = loggausspdf(X,mu(:,i),Sigma(:,:,i));
+end
+\end{lstlisting}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+
+\textbf{Extract model parameters}
+\begin{itemize}
+\item \texttt{mu}: cluster means
+\item \texttt{Sigma}: covariance matrices
+\item \texttt{w}: mixture weights
+\end{itemize}
+
+\textbf{Compute log probabilities:}
+For each cluster $i$, compute $\log p(x|\mu_i,\Sigma_i)$
+\end{minipage}
+\end{minipage}
+
+\vspace{0.5cm}
+
+\section{Calculate Responsibilities}
+
+\begin{minipage}{\textwidth}
+\begin{minipage}[t]{0.48\textwidth}
+\begin{lstlisting}[language=Matlab, firstnumber=99]
+logRho = bsxfun(@plus,logRho,log(w));
+T = logsumexp(logRho,2);
+llh = sum(T)/n; % loglikelihood
+logR = bsxfun(@minus,logRho,T);
+R = exp(logR);
+\end{lstlisting}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+
+Add log weights
+\begin{itemize}
+\item $\log(\pi_k \times p(x|\theta_k))$
+\end{itemize}
+
+\textbf{Logsumexp trick}
+\begin{itemize}
+\item $T = \log \sum_k \pi_k \times p(x|\theta_k)$
+\end{itemize}
+
+Compute average log-likelihood.
+
+Calculate responsibilities $R(n,k)$ that represent the posterior probability of point $n$ belonging to cluster $k$:
+\end{minipage}
+\end{minipage}
+
+\vspace{0.5cm}
+
+\section{M-step Function}
+
+\begin{minipage}{\textwidth}
+\begin{minipage}[t]{0.48\textwidth}
+\begin{lstlisting}[language=Matlab, firstnumber=106]
+function model = maximization(X, R)
+[d,n] = size(X);
+k = size(R,2);
+
+nk = sum(R,1);
+w = nk/n;
+mu = bsxfun(@times, X*R, 1./nk);
+
+Sigma = zeros(d,d,k);
+sqrtR = sqrt(R);
+for i = 1:k
+    Xo = bsxfun(@minus,X,mu(:,i));
+    Xo = bsxfun(@times,Xo,sqrtR(:,i)');
+    Sigma(:,:,i) = Xo*Xo'/nk(i);
+    Sigma(:,:,i) = Sigma(:,:,i)+eye(d)*(1e-6);
+end
+
+model.mu = mu;
+model.Sigma = Sigma;
+model.weight = w;
+\end{lstlisting}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+
+Compute effective number of points per cluster.
+
+Update mixture weights and means $\mu_k$.
+
+Update covariance matrices $\Sigma_k$:
+
+Assign \texttt{mu}, \texttt{Sigma}, and \texttt{weight} to model struct.
+
+\end{minipage}
+\end{minipage}
+
+\vspace{0.5cm}
+
+\section{Log Gaussian PDF function}
+
+\begin{minipage}{\textwidth}
+\begin{minipage}[t]{0.48\textwidth}
+\begin{lstlisting}[language=Matlab, firstnumber=127]
+function y = loggausspdf(X, mu, Sigma)
+d = size(X,1);
+X = bsxfun(@minus,X,mu);
+[U,p]= chol(Sigma);
+if p ~= 0
+    error('ERROR: Sigma is not PD.');
+end
+Q = U'\X;
+q = dot(Q,Q,1);  % quadratic term
+c = d*log(2*pi)+2*sum(log(diag(U)));
+y = -(c+q)/2;
+\end{lstlisting}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+    
+Center data by subtracting mean, then compute the Cholesky decomposition of covariance matrix $\Sigma$.
+
+Solve $U'Q = X$ efficiently
+
+Compute quadratic term
+
+Compute log normalization constant and final log probability.
+\end{minipage}
+\end{minipage}
+
+\end{document}
