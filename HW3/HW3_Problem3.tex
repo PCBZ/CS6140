@@ -383,9 +383,22 @@ model.weight = w;
 
 Compute effective number of points per cluster.
 
-Update mixture weights and means $\mu_k$.
+Update mixture weights.
+\begin{itemize}
+    \item Weights: $\pi_k = \frac{n_k}{n}$
+\end{itemize}
+
+Update means $\mu_k$:
+\begin{itemize}
+    \item $\mu_k = \frac{1}{n_k} \sum_{i=1}^{n} r_{ik} x_i$
+    \item $r_{ik}$ is the responsibility of point $i$ for cluster $k$
+\end{itemize}
 
 Update covariance matrices $\Sigma_k$:
+\begin{itemize}
+    \item $\Sigma_k = \frac{1}{n_k} \sum_{i=1}^{n} r_{ik} (x_i - \mu_k)(x_i - \mu_k)^T + \epsilon I$
+    \item Add small $\epsilon$ to ensure positive definiteness
+\end{itemize}
 
 Assign \texttt{mu}, \texttt{Sigma}, and \texttt{weight} to model struct.
 

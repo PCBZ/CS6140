@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999995 (TeX Live 2023) (preloaded format=xelatex 2023.9.29)  26 JUN 2025 18:41
+This is XeTeX, Version 3.141592653-2.6-0.999995 (TeX Live 2023) (preloaded format=xelatex 2023.9.29)  26 JUN 2025 18:51
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -218,7 +218,8 @@ File: l3backend-xetex.def 2023-01-16 L3 backend support: XeTeX
 \g__pdf_backend_object_int=\count289
 \g__pdf_backend_annotation_int=\count290
 \g__pdf_backend_link_int=\count291
-) (./HW3_Problem3.aux)
+)
+No file HW3_Problem3.aux.
 \openout1 = `HW3_Problem3.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 44.
@@ -231,7 +232,7 @@ LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 44.
 LaTeX Font Info:    ... okay on input line 44.
 LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 44.
 LaTeX Font Info:    Trying to load font information for TS1+cmr on input line 44.
- (/usr/local/texlive/2023/texmf-dist/tex/latex/base/ts1cmr.fd
+(/usr/local/texlive/2023/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 2022/07/10 v2.5l Standard LaTeX font definitions
 )
 LaTeX Font Info:    ... okay on input line 44.
@@ -290,8 +291,8 @@ File: lstlang1.sty 2023/02/27 1.9 listings language file
 
 ] [2] [3] [4] (./HW3_Problem3.aux) ) 
 Here is how much of TeX's memory you used:
- 5172 strings out of 476683
- 74803 string characters out of 5804047
+ 5170 strings out of 476683
+ 74769 string characters out of 5804047
  2169018 words of memory out of 5000000
  25379 multiletter control sequences out of 15000+600000
  518568 words of font info for 67 fonts, out of 8000000 for 9000
