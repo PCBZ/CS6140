@@ -173,5 +173,5 @@ def create_lstm_model(src_vocab_size:int, tgt_vocab_size:int, embed_size:int=256
     """
     # Create encoder and decoder with 'lstm' type
     encoder = Encoder(input_size=src_vocab_size, embed_size=embed_size, hidden_size=hidden_size, num_layers=num_layers, rnn_type="lstm")
-    decoder = Decoder(input_size=tgt_vocab_size, embed_size=embed_size, hidden_size=hidden_size, num_layers=num_layers, rnn_type="lstm")
+    decoder = Decoder(output_size=tgt_vocab_size, embed_size=embed_size, hidden_size=hidden_size, num_layers=num_layers, rnn_type="lstm")
     return Seq2Seq(encoder, decoder)
