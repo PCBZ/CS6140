@@ -172,6 +172,58 @@ def download_data_if_needed(url: str, filename: str):
         with open(filename, 'wb') as f:
             f.write(response.content)
 
+def plot_losses(train_losses, val_losses, model_name):
+    save_dir = "figures"
+    """Plot training and validation losses"""
+    # Create directory if it doesn't exist
+    os.makedirs(save_dir, exist_ok=True)
+
+    # Create single figure
+    plt.figure(figsize=(10, 6))
+    
+    epochs = range(1, len(train_losses) + 1)
+    
+    # Plot both curves
+    plt.plot(epochs, train_losses, 'b-', label='Training Loss', 
+             linewidth=2.5, marker='o', markersize=6)
+    plt.plot(epochs, val_losses, 'r-', label='Validation Loss', 
+             linewidth=2.5, marker='s', markersize=6)
+    
+    # Add minimum validation loss annotation
+    min_val_loss = min(val_losses)
+    min_epoch = val_losses.index(min_val_loss) + 1
+    plt.annotate(f'Best: {min_val_loss:.3f}',
+                xy=(min_epoch, min_val_loss),
+                xytext=(min_epoch + 0.5, min_val_loss + 0.2),
+                arrowprops=dict(arrowstyle='->', color='red', alpha=0.7),
+                fontsize=10,
+                bbox=dict(boxstyle="round,pad=0.3", facecolor='yellow', alpha=0.5))
+    
+    # Add final values text
+    textstr = f'Final Train: {train_losses[-1]:.3f}\nFinal Val: {val_losses[-1]:.3f}'
+    plt.text(0.02, 0.98, textstr, transform=plt.gca().transAxes, fontsize=10,
+            verticalalignment='top',
+            bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.8))
+    
+    # Styling
+    plt.title(f'{model_name.upper()} Training Curves', fontsize=16, fontweight='bold')
+    plt.xlabel('Epoch', fontsize=13)
+    plt.ylabel('Loss', fontsize=13)
+    plt.legend(loc='upper right', fontsize=11)
+    plt.grid(True, alpha=0.3)
+    
+    plt.tight_layout()
+    
+    # Save the figure
+    filename = f'{save_dir}/{model_name}_training_curve.png'
+    plt.savefig(filename, dpi=150, bbox_inches='tight')
+    print(f"📊 Training curve saved to {filename}")
+    
+    plt.show()
+    plt.close()
+    
+    return filename
+
 # Main training script
 if __name__ == "__main__":
     import sys
@@ -294,8 +346,7 @@ if __name__ == "__main__":
     )
     
     # Plot losses
-    # plot_losses(train_losses, val_losses, f"{model_type.upper()} Training Curves")
-     
+    plot_losses(train_losses, val_losses, f"{model_type.upper()} Training Curves")
 
     debug_model_output(model, test_loader, src_vocab, tgt_vocab, device,model_type)
 
