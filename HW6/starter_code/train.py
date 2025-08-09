@@ -179,15 +179,15 @@ def plot_losses(train_losses, val_losses, model_name):
     os.makedirs(save_dir, exist_ok=True)
 
     # Create single figure
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(8, 5))
     
     epochs = range(1, len(train_losses) + 1)
     
     # Plot both curves
     plt.plot(epochs, train_losses, 'b-', label='Training Loss', 
-             linewidth=2.5, marker='o', markersize=6)
+             linewidth=2.5, marker='o', markersize=5)
     plt.plot(epochs, val_losses, 'r-', label='Validation Loss', 
-             linewidth=2.5, marker='s', markersize=6)
+             linewidth=2.5, marker='s', markersize=5)
     
     # Add minimum validation loss annotation
     min_val_loss = min(val_losses)
@@ -202,14 +202,14 @@ def plot_losses(train_losses, val_losses, model_name):
     # Add final values text
     textstr = f'Final Train: {train_losses[-1]:.3f}\nFinal Val: {val_losses[-1]:.3f}'
     plt.text(0.02, 0.98, textstr, transform=plt.gca().transAxes, fontsize=10,
-            verticalalignment='top',
+            verticalalignment='bottom', horizontalalignment='left',
             bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.8))
     
     # Styling
     plt.title(f'{model_name.upper()} Training Curves', fontsize=16, fontweight='bold')
     plt.xlabel('Epoch', fontsize=13)
     plt.ylabel('Loss', fontsize=13)
-    plt.legend(loc='upper right', fontsize=11)
+    plt.legend(loc='best', fontsize=11)
     plt.grid(True, alpha=0.3)
     
     plt.tight_layout()
@@ -343,7 +343,7 @@ if __name__ == "__main__":
     )
     
     # Plot losses
-    plot_losses(train_losses, val_losses, f"{model_type.upper()} Training Curves")
+    plot_losses(train_losses, val_losses, f"{model_type.upper()}_training_curves")
 
     debug_model_output(model, test_loader, src_vocab, tgt_vocab, device,model_type)
 
