@@ -220,9 +220,6 @@ def plot_losses(train_losses, val_losses, model_name):
     print(f"📊 Training curve saved to {filename}")
     
     plt.show()
-    plt.close()
-    
-    return filename
 
 # Main training script
 if __name__ == "__main__":
