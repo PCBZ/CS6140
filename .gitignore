@@ -48,15 +48,6 @@ checkpoints/
 *.pt
 *.pth
 
-# Figures and plots
-figures/
-*/figures/
-**/figures/
-*.png
-*.jpg
-*.jpeg
-*.svg
-
 # LaTeX
 *.aux
 *.log
