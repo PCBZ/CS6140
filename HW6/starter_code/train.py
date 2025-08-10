@@ -173,7 +173,7 @@ def download_data_if_needed(url: str, filename: str):
             f.write(response.content)
 
 def plot_losses(train_losses, val_losses, model_name):
-    save_dir = "../report/"
+    save_dir = "../report"
     """Plot training and validation losses"""
     # Create directory if it doesn't exist
     os.makedirs(save_dir, exist_ok=True)
@@ -326,7 +326,7 @@ if __name__ == "__main__":
     )
     
     # Plot losses
-    plot_losses(train_losses, val_losses, f"{model_type.upper()}_training_curves")
+    plot_losses(train_losses, val_losses, f"{model_type.upper()}")
 
     debug_model_output(model, test_loader, src_vocab, tgt_vocab, device,model_type)
 

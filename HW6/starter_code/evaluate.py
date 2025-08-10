@@ -58,7 +58,7 @@ def greedy_decode_transformer_manual(model, src,max_len, sos_idx, eos_idx, devic
     
     # 2) Encode
     enc = model.src_embedding(src)
-    enc = model.pos_enc(enc)
+    enc = model.pos_encoding(enc)
   
     for block in model.encoder:
         enc = block(enc, src_mask)
@@ -95,14 +95,14 @@ def greedy_decode_transformer(model, src, max_len, sos_idx, eos_idx, device='cpu
 
     # Encode source sequence
     with torch.no_grad():
-        src_emb = model.pos_enc(model.src_embedding(src))  # (batch, src_len, d_model)
+        src_emb = model.pos_encoding(model.src_embedding(src))  # (batch, src_len, d_model)
         memory = model.encoder(src_emb.transpose(0, 1), src_key_padding_mask=src_key_padding_mask)  # (src_len, batch, d_model)
 
         # Start with <sos> token
         ys = torch.full((batch_size, 1), sos_idx, dtype=torch.long, device=device)  # (batch, 1)
 
         for _ in range(max_len - 1):
-            tgt_emb = model.pos_enc(model.tgt_embedding(ys)).transpose(0, 1)  # (tgt_len, batch, d_model)
+            tgt_emb = model.pos_encoding(model.tgt_embedding(ys)).transpose(0, 1)  # (tgt_len, batch, d_model)
             tgt_mask = model.generate_square_subsequent_mask(ys.size(1)).to(device)
             tgt_key_padding_mask = (ys == model.pad_idx)
 
