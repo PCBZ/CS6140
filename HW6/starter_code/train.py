@@ -173,7 +173,7 @@ def download_data_if_needed(url: str, filename: str):
             f.write(response.content)
 
 def plot_losses(train_losses, val_losses, model_name):
-    save_dir = "figures"
+    save_dir = "../report/"
     """Plot training and validation losses"""
     # Create directory if it doesn't exist
     os.makedirs(save_dir, exist_ok=True)
@@ -202,6 +202,7 @@ def plot_losses(train_losses, val_losses, model_name):
     print(f"📊 Training curve saved to {filename}")
     
     plt.show()
+    plt.close()  # Close the figure to free memory
 
 # Main training script
 if __name__ == "__main__":
