@@ -184,8 +184,8 @@ def plot_losses(train_losses, val_losses, model_name):
     epochs = range(1, len(train_losses) + 1)
     
     # Plot both curves
-    plt.plot(epochs, train_losses, 'b-', label='Training Loss', marker='o', markersize=2)
-    plt.plot(epochs, val_losses, 'r-', label='Validation Loss', marker='s', markersize=2)
+    plt.plot(epochs, train_losses, 'b-', label='Training Loss', marker='o', markersize=4)
+    plt.plot(epochs, val_losses, 'r-', label='Validation Loss', marker='x', markersize=4)
 
     # Styling
     plt.title(f'{model_name.upper()} Training Curves', fontweight='bold')
