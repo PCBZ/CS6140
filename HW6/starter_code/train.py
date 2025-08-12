@@ -7,6 +7,8 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 import os
+import time
+from datetime import timedelta
 
 def train_epoch(model: nn.Module, dataloader: DataLoader, optimizer: optim.Adam, criterion: torch.nn.CrossEntropyLoss, device: torch.device, teacher_forcing_ratio:float=0.5,name:str =''):
     """Train for one epoch"""
@@ -101,6 +103,7 @@ def get_noam_scheduler(optimizer: optim.Adam, d_model: int, warmup_steps: int):
         return scale
 
     return torch.optim.lr_scheduler.LambdaLR(optimizer, lr_lambda)
+
 def train_model(model: nn.Module, train_loader: DataLoader, val_loader: DataLoader, test_loader: DataLoader, num_epochs:int=30, 
                 learning_rate:float=0.001, device='cuda', model_name='model'):
     """Full training loop"""
@@ -115,6 +118,8 @@ def train_model(model: nn.Module, train_loader: DataLoader, val_loader: DataLoad
     train_losses = []
     val_losses = []
     best_val_loss = float('inf')
+
+    start_time = time.time()
     
     for epoch in range(num_epochs):
         print(f"\nEpoch {epoch+1}/{num_epochs}")
@@ -151,6 +156,10 @@ def train_model(model: nn.Module, train_loader: DataLoader, val_loader: DataLoad
             print("Early stopping triggered")
             break
         debug_model_output(model, test_loader, src_vocab, tgt_vocab, device,model_name)
+    
+    end_time = time.time()
+    print(f"Training complete in {timedelta(seconds=int(end_time - start_time))}")
+
     return train_losses, val_losses
 
 def load_model(model: nn.Module, checkpoint_path: str):
@@ -209,7 +218,8 @@ if __name__ == "__main__":
     import sys
     from data_utils import *
     from transformer_model_p3 import Transformer #p3 or p4
-    from baseline_models_p1 import create_rnn_model, create_lstm_model #p1 or p2 
+    from baseline_models_p1 import create_rnn_model, create_lstm_model #p1 or p2
+    # from baseline_models_p2 import create_rnn_model, create_lstm_model
     from evaluate import calculate_scores, debug_model_output
     import numpy as np 
     # Set device
@@ -326,7 +336,7 @@ if __name__ == "__main__":
     )
     
     # Plot losses
-    plot_losses(train_losses, val_losses, f"{model_type.upper()}")
+    plot_losses(train_losses, val_losses, f"CUSTOM_{model_type.upper()}")
 
     debug_model_output(model, test_loader, src_vocab, tgt_vocab, device,model_type)
 

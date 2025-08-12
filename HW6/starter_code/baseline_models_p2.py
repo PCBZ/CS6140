@@ -3,6 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import random
 from torch.nn.utils.rnn import PackedSequence, pad_packed_sequence, pack_padded_sequence
+import math
 
 class CustomRNNCell(nn.Module):
     """
@@ -21,12 +22,25 @@ class CustomRNNCell(nn.Module):
         self.W_hh = nn.Parameter(torch.Tensor(hidden_size, hidden_size))
         # - b_hh: hidden-to-hidden bias [hidden_size]
         self.b_hh = nn.Parameter(torch.Tensor(hidden_size))
+        self.b_ih = nn.Parameter(torch.Tensor(hidden_size))
         # Use nn.Parameter() to make them trainable parameters
         # Initialize weights using Xavier/Glorot initialization: nn.init.xavier_uniform_()
         nn.init.xavier_uniform_(self.W_ih)
         nn.init.xavier_uniform_(self.W_hh)
         # Initialize biases to zero: nn.init.zeros_()
         nn.init.zeros_(self.b_hh)
+
+        self.reset_parameters()
+    
+    def reset_parameters(self):
+        """
+        Reset parameters to their initial values
+        """
+        std = 1.0 / math.sqrt(self.hidden_size)
+        nn.init.uniform_(self.W_ih, -std, std)
+        nn.init.uniform_(self.W_hh, -std, std)
+        nn.init.uniform_(self.b_ih, -std, std)
+        nn.init.uniform_(self.b_hh, -std, std)
         
     def forward(self, input: torch.Tensor, hidden: torch.Tensor) -> torch.Tensor:
         """
@@ -178,7 +192,8 @@ class CustomRNN(nn.Module):
                    for _ in range(self.num_layers)]
         else:
             # hidden: [L, B, H]
-            h_t = [hidden[layer] for layer in range(self.num_layers)]
+            # h_t = [hidden[layer] for layer in range(self.num_layers)]
+            h_t = list(hidden)
 
         # collect all time‑step outputs
         outputs = input.new_zeros(B, T, self.hidden_size)
@@ -396,7 +411,7 @@ class Seq2Seq(nn.Module):
             teacher_force = random.random() < teacher_forcing_ratio
         #     4. Get next input (either from target if teacher forcing or highest predicted token) should be shape [batch_size, 1]
             if teacher_force:
-                input = tgt[t].unsqueeze(1)
+                input = tgt[:, t].unsqueeze(1)
             else:
                 input = torch.argmax(decoder_output, dim=1).unsqueeze(1)
         

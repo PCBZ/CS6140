@@ -148,7 +148,9 @@ def greedy_decode_seq2seq(model,src, src_lengths, max_len, sos_idx, eos_idx, dev
                                        encoder_outputs)
         # output: (batch=1, seq_len=1, vocab)
         # squeeze out seq dim, then take the 0th batch
-        logits = output.squeeze(1)[0]           # → (vocab_size,)
+        # logits = output.squeeze(1)[0]           # → (vocab_size,)
+        logits = output[0] 
+        
         probs  = F.softmax(logits, dim=-1)
 
         # pick top-k candidates
@@ -217,7 +219,7 @@ def calculate_scores(model, dataloader, src_vocab, tgt_vocab, device,name, max_l
                         )
                     )
                 # each entry is a list of token‐ids including <sos>
-                decoded_batch = [ids[1:] for ids in decoded_batch]  # strip <sos>
+                # decoded_batch = [ids[1:] for ids in decoded_batch]  # strip <sos>
             else:
                 # Transformer: batch‐wise greedy decode
                 decoded = greedy_decode_transformer(
@@ -230,7 +232,7 @@ def calculate_scores(model, dataloader, src_vocab, tgt_vocab, device,name, max_l
                 ) #change this function to greedy_decode_transformer_manual for p4 implementation 
 
                 # decoded shape = (batch, seq_out); drop initial <sos>
-                decoded_batch = [seq[1:] for seq in decoded]
+                decoded_batch = decoded
             index=0
             # -- Turn token lists into word lists and gather refs --
             for tok_list, gold_len in zip(decoded_batch, tgt_lens):
@@ -323,7 +325,8 @@ def debug_model_output(model, dataloader, src_vocab, tgt_vocab, device, model_na
                         ) #change this function to greedy_decode_transformer_manual for p4 implementation 
 
                         # print(output)
-                        decoded = output[0][1:]#[seq[1:] for seq in output]
+                        # decoded = output[0][1:]#[seq[1:] for seq in output]
+                        decoded = output[0]
                         # print(decoded)
                     pred_words = []
                     for token in decoded:
