@@ -218,8 +218,8 @@ if __name__ == "__main__":
     import sys
     from data_utils import *
     from transformer_model_p3 import Transformer #p3 or p4
-    from baseline_models_p1 import create_rnn_model, create_lstm_model #p1 or p2
-    # from baseline_models_p2 import create_rnn_model, create_lstm_model
+    # from baseline_models_p1 import create_rnn_model, create_lstm_model #p1 or p2
+    from baseline_models_p2 import create_rnn_model, create_lstm_model
     from evaluate import calculate_scores, debug_model_output
     import numpy as np 
     # Set device
