@@ -4,23 +4,29 @@
 ### 1.1 Quantitative Metrics
 | Model | Final Train Loss | Final Val Loss | BLEU Score | BERT F1 Score |
 |-------|-----------------|----------------|------------|---------------|
-| RNN   |     5.4138      |   5.8222     |     3.34  | 0.13 |
-| Custome RNN |   5.7491   |   6.2771   |  2.45  |   0.01   |
-| LSTM  |  3.2654   |  4.5242  |  3.56 |  0.28  |
-| Custom LSTM |  3.4757   |  4.5855  |  2.25   |   0.25  |
-| Transformer | 1.7135 |  3.03  |  1.59   | 0.56 |
+| RNN   |     5.6046     |   6.1092  |     2.67  | 0.09 |
+| Custome RNN |   5.9196  |   6.4307   | 1.95 |   -0.013   |
+| LSTM  |  3.1608   |  4.4750 |  6.06 |  0.29  |
+| Custom LSTM |  3.1608  |  4.4750  |  6.06  |   0.29 |
+| Transformer | 1.6903 |  2.1834  |  1.33   | 0.55 |
 
 ### 1.2 Training Curves
-<img width="600" alt="RNN_training_curve" src="https://github.com/user-attachments/assets/2f36b180-99d6-4be7-9cf6-f9c57f46d66b" />
-<img width="600" alt="CUSTOM_RNN_training_curve" src="https://github.com/user-attachments/assets/8cdf2535-f988-4736-a330-4eeaa2e87e40" />
-<img width="600" alt="LSTM_training_curve" src="https://github.com/user-attachments/assets/607dd30b-3884-4ed9-b8b3-b88d524c26e4" />
-<img width="600" alt="CUSTOM_LSTM_training_curve" src="https://github.com/user-attachments/assets/b136d525-2391-4ce3-ad6b-3248ad549255" />
-<img width="600" alt="TRANSFORMER_training_curve" src="https://github.com/user-attachments/assets/84c57b0c-c4b6-4fc4-8e43-077acf3cfce8" />
+<img width="600" alt="RNN_training_curve" src="https://github.com/user-attachments/assets/393d0539-e8b2-45a4-9af7-427bb8691988" />
+<img width="600" alt="CUSTOM_RNN_training_curve" src="https://github.com/user-attachments/assets/0edf57f7-10e9-4eb1-aadc-2125df43bff8" />
+<img width="600" alt="LSTM_training_curve" src="https://github.com/user-attachments/assets/f19fb658-d590-47e2-a0a5-7568ba2c3497" />
+<img width="600" alt="CUSTOM_LSTM_training_curve" src="https://github.com/user-attachments/assets/f5b29969-c8a6-4bad-a2c3-8c208356cf3b" />
+<img width="600" alt="TRANSFORMER_training_curve" src="https://github.com/user-attachments/assets/be940ec4-5f89-4582-b8ca-103ace09bd5d" />
+
 
 ## 2. Model Comparison Analysis
-### Compare Different Algorithms
-- Transformer learns better (loss), and produces the most semantically accurate translations (BERT F1), but BLEU score is low, possibly due to more varied word choices or paraphrasing.
-- LSTM outperforms RNN consistently on all metrics, indicating it better captures sequential dependencies.
-- RNN performs worst overall in learning and semantic quality.
+- RNN → LSTM → Transformer shows clear progression
+- Semantic understanding: 0.09 → 0.29 → 0.55 (6x improvement)
 
+## 3. Challenges Faced
+### 3.1 **Custom RNN Failure**
+- **Issue:** BERT F1 = -0.013 (negative!), worse than random noise
+
+### 3.2 **Transformer BLEU Paradox**
+- **Issue:** Highest BERT (0.55) but lowest BLEU (1.33)
+- **Insight:** Transformer generates paraphrases (semantically correct) rather than literal translations
 
