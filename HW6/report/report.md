@@ -5,7 +5,7 @@
 | Model | Final Train Loss | Final Val Loss | BLEU Score | BERT F1 Score |
 |-------|-----------------|----------------|------------|---------------|
 | RNN   |     5.6046     |   6.1092  |     2.67  | 0.09 |
-| Custome RNN |   5.9196  |   6.4307   | 1.95 |   -0.013   |
+| Custome RNN |   5.7518  |   6.2461  | 1.85 |   0.015   |
 | LSTM  |  3.1608   |  4.4750 |  6.06 |  0.29  |
 | Custom LSTM |  3.1608  |  4.4750  |  6.06  |   0.29 |
 | Transformer | 1.6903 |  2.1834  |  1.33   | 0.55 |
@@ -24,7 +24,7 @@
 
 ## 3. Challenges Faced
 ### 3.1 **Custom RNN Failure**
-- **Issue:** BERT F1 = -0.013 (negative!), worse than random noise
+- **Issue:** BERT F1 = 0.015 (near zero), indicating complete semantic failure
 
 ### 3.2 **Transformer BLEU Paradox**
 - **Issue:** Highest BERT (0.55) but lowest BLEU (1.33)
